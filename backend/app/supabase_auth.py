@@ -1,7 +1,10 @@
+import logging
 import httpx
 from fastapi import HTTPException
 
 from .config import SUPABASE_URL, SUPABASE_ANON_KEY
+
+logger = logging.getLogger(__name__)
 
 AUTH_BASE = f"{SUPABASE_URL}/auth/v1"
 HEADERS = {
@@ -12,20 +15,36 @@ HEADERS = {
 
 async def get_user_id(access_token: str) -> str:
     """Get the authenticated user's ID from their access token."""
+    url = f"{AUTH_BASE}/user"
+    token_preview = access_token[:20] + "..." if len(access_token) > 20 else access_token
+    logger.info(f"[get_user_id] Calling Supabase auth: {url}")
+    logger.info(f"[get_user_id] Token preview: {token_preview}")
+
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{AUTH_BASE}/user",
+            url,
             headers={
                 **HEADERS,
                 "Authorization": f"Bearer {access_token}",
             },
         )
 
+    logger.info(f"[get_user_id] Supabase response status: {response.status_code}")
+    logger.info(f"[get_user_id] Supabase response body: {response.text}")
+
     if response.status_code != 200:
-        raise HTTPException(status_code=401, detail="Invalid or expired token")
+        logger.error(
+            f"[get_user_id] FAILED — Supabase returned {response.status_code}: {response.text}"
+        )
+        raise HTTPException(
+            status_code=401,
+            detail=f"Invalid or expired token. Supabase response: {response.text}",
+        )
 
     data = response.json()
-    return data.get("id", "")
+    user_id = data.get("id", "")
+    logger.info(f"[get_user_id] Resolved user_id: {user_id}")
+    return user_id
 
 
 async def signup(email: str, password: str, full_name: str) -> dict:

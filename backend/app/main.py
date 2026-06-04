@@ -1,6 +1,9 @@
+import logging
 import httpx
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+
+logger = logging.getLogger(__name__)
 
 from .models import SignUpRequest, LoginRequest, AuthResponse, WardrobeItemCreate, WardrobeItemResponse, CalendarEventCreate, CalendarEventResponse
 from .supabase_auth import signup, login, get_user_id
@@ -123,27 +126,43 @@ async def add_calendar_event(
 ):
     """Save a calendar event for the authenticated user."""
     token = authorization.replace("Bearer ", "")
+    token_preview = token[:20] + "..." if len(token) > 20 else token
+    logger.info(f"[POST /calendar] Received request: day={body.day}, event_name={body.event_name}, occasion={body.occasion}")
+    logger.info(f"[POST /calendar] Token preview: {token_preview}")
+
     user_id = await get_user_id(token)
+    logger.info(f"[POST /calendar] Resolved user_id: {user_id}")
+
+    insert_payload = {
+        "user_id": user_id,
+        "day": body.day,
+        "event_name": body.event_name,
+        "occasion": body.occasion,
+    }
+    insert_url = f"{REST_BASE}/calendar_events"
+    logger.info(f"[POST /calendar] Inserting into Supabase: {insert_url}")
+    logger.info(f"[POST /calendar] Insert payload: {insert_payload}")
 
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{REST_BASE}/calendar_events",
+            insert_url,
             headers={
                 **REST_HEADERS,
                 "Authorization": f"Bearer {token}",
             },
-            json={
-                "user_id": user_id,
-                "day": body.day,
-                "event_name": body.event_name,
-                "occasion": body.occasion,
-            },
+            json=insert_payload,
         )
 
+    logger.info(f"[POST /calendar] Supabase insert response status: {response.status_code}")
+    logger.info(f"[POST /calendar] Supabase insert response body: {response.text}")
+
     if response.status_code not in (200, 201):
+        logger.error(
+            f"[POST /calendar] INSERT FAILED — Supabase returned {response.status_code}: {response.text}"
+        )
         raise HTTPException(
             status_code=response.status_code,
-            detail=response.text,
+            detail=f"Supabase insert failed ({response.status_code}): {response.text}",
         )
 
     return response.json()
