@@ -6,10 +6,14 @@ from .supabase_auth import signup, login
 
 app = FastAPI(title="StyleSync API", version="0.1.0")
 
-# CORS — allow the React dev server
+# CORS — allow the React dev server and Vercel deployments
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://stylesync-jhvtrumj9-ahmad-dalvi-s-projects.vercel.app",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
