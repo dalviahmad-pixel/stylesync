@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = '/_/backend';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const occasionOptions = ['Formal', 'Smart Casual', 'Casual', 'Sport'];

@@ -13,7 +13,7 @@ function SignUp({ onNext, onUserDataChange, onNavigateToLogin }) {
     if (name && email && password) {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8000/auth/signup', {
+        const response = await fetch('/_/backend/auth/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password, full_name: name }),

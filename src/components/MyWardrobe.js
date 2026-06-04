@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = '/_/backend';
 
 const seedItems = [
   { name: 'White Button Shirt', category: 'Tops', style: 'Smart Casual', emoji: '👔' },
