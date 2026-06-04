@@ -22,6 +22,7 @@ function EventCalendar({ onNext }) {
 
     async function loadEvents() {
       try {
+        console.log('[EventCalendar] GET /calendar - Authorization token:', token ? `${token.substring(0, 20)}...` : 'NULL/UNDEFINED');
         const res = await fetch(`${API_BASE}/calendar`, {
           headers: { Authorization: `Bearer ${token}` },
         });
@@ -65,6 +66,7 @@ function EventCalendar({ onNext }) {
 
     setSaving(true);
     try {
+      console.log('[EventCalendar] POST /calendar - Authorization token:', token ? `${token.substring(0, 20)}...` : 'NULL/UNDEFINED');
       const res = await fetch(`${API_BASE}/calendar`, {
         method: 'POST',
         headers: {
