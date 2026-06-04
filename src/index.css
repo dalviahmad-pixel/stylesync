@@ -1,0 +1,560 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+
+/* Header Band */
+.header {
+  background-color: #7C3AED;
+  padding: 20px 24px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: #FFFFFF;
+  margin-bottom: 4px;
+}
+
+.header p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  color: #E9D5FF;
+}
+
+/* Main Container */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* Card Container */
+.card {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 24px;
+  margin-top: 24px;
+}
+
+/* Primary Button */
+.btn-primary {
+  width: 100%;
+  background-color: #7C3AED;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 16px;
+}
+
+.btn-primary:hover {
+  background-color: #6D28D9;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn-secondary {
+  width: 100%;
+  background-color: #E2E8F0;
+  color: #4A5568;
+  border: none;
+  border-radius: 10px;
+  padding: 13px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  margin-top: 12px;
+}
+
+.btn-secondary:hover {
+  background-color: #CBD5E0;
+  transform: translateY(-1px);
+}
+
+/* Small Button */
+.btn-small {
+  padding: 10px 16px;
+  font-size: 14px;
+  width: auto;
+  margin-top: 0;
+}
+
+/* Form Inputs */
+.form-input {
+  border: 1.5px solid #E2E8F0;
+  border-radius: 10px;
+  padding: 12px;
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #1A202C;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #7C3AED;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+.form-input::placeholder {
+  color: #A0AEC0;
+}
+
+/* Form Label */
+.form-label {
+  display: block;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #4A5568;
+  margin-bottom: 8px;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 16px;
+}
+
+/* Welcome Text */
+.welcome-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1A202C;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+/* Section Heading */
+.section-heading {
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1A202C;
+  margin-bottom: 20px;
+}
+
+/* Filter Bar */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+/* Filter Chip */
+.filter-chip {
+  border: 1.5px solid #E9D5FF;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #7C3AED;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+  background-color: #F3E8FF;
+}
+
+.filter-chip.active {
+  background-color: #7C3AED;
+  color: #FFFFFF;
+  border-color: #7C3AED;
+}
+
+/* Wardrobe Grid */
+.wardrobe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+
+/* Clothing Card */
+.clothing-card {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  background-color: #FFFFFF;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.clothing-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.clothing-emoji {
+  font-size: 40px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.clothing-name {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1A202C;
+  margin-bottom: 8px;
+}
+
+.clothing-tag {
+  display: inline-block;
+  background-color: #F3E8FF;
+  color: #7C3AED;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+/* Upload Box */
+.upload-box {
+  border: 2px dashed #CBD5E0;
+  border-radius: 12px;
+  padding: 40px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+}
+
+.upload-box:hover {
+  border-color: #7C3AED;
+  background-color: #FAF5FF;
+}
+
+.upload-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.upload-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  color: #4A5568;
+}
+
+/* Outfit Card */
+.outfit-card {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  background-color: #F5F3FF;
+}
+
+.outfit-occasion {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #1A202C;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.outfit-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.outfit-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #F7FAFC;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.outfit-item-emoji {
+  font-size: 20px;
+}
+
+.outfit-item-name {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #4A5568;
+}
+
+.outfit-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.outfit-buttons .btn-primary,
+.outfit-buttons .btn-secondary {
+  flex: 1;
+  margin-top: 0;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.day-column {
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 200px;
+  background-color: #FFFFFF;
+}
+
+.day-name {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  color: #1A202C;
+  text-align: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #E2E8F0;
+}
+
+.day-events {
+  margin-bottom: 12px;
+}
+
+.event-item {
+  background-color: #F3E8FF;
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #7C3AED;
+}
+
+.event-name {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.event-occasion {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.add-event-btn {
+  width: 100%;
+  background-color: #F7FAFC;
+  color: #7C3AED;
+  border: 1.5px dashed #CBD5E0;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-event-btn:hover {
+  background-color: #FAF5FF;
+  border-color: #7C3AED;
+}
+
+/* Event Form */
+.event-form {
+  background-color: #F7FAFC;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.event-form .form-input {
+  margin-bottom: 8px;
+  font-size: 13px;
+  padding: 10px;
+}
+
+.event-form .form-label {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.event-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%234A5568' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+.event-form-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.event-form-buttons button {
+  flex: 1;
+  padding: 8px;
+  font-size: 12px;
+  margin-top: 0;
+}
+
+/* Success Message */
+.success-message {
+  background-color: #DEF7EC;
+  border: 1px solid #31C48D;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin-top: 24px;
+}
+
+.success-message p {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  color: #03543F;
+}
+
+/* Confirmation Screen */
+.confirmation-content {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.confirmation-emoji {
+  font-size: 80px;
+  color: #7C3AED;
+  display: block;
+  margin-bottom: 24px;
+  background-color: #F3E8FF;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.confirmation-heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  color: #1A202C;
+  margin-bottom: 16px;
+}
+
+.confirmation-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  color: #4A5568;
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+/* Welcome Screen */
+.welcome-screen-content {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.welcome-emoji {
+  font-size: 64px;
+  display: block;
+  margin-bottom: 24px;
+}
+
+.welcome-heading {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: #1A202C;
+  margin-bottom: 12px;
+}
+
+.welcome-subtext {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  color: #4A5568;
+  line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .calendar-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .wardrobe-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .outfit-buttons {
+    flex-direction: column;
+  }
+  
+  .filter-bar {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .wardrobe-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .container {
+    padding: 16px;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+}
