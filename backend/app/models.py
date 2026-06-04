@@ -17,3 +17,19 @@ class AuthResponse(BaseModel):
     access_token: str
     refresh_token: str
     user: dict[str, Any]
+
+
+class WardrobeItemCreate(BaseModel):
+    name: str
+    category: str
+    style: str
+    emoji: str
+
+
+class WardrobeItemResponse(BaseModel):
+    id: int | str
+    user_id: str
+    name: str
+    category: str
+    style: str
+    emoji: str

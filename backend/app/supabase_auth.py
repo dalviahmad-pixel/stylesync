@@ -10,6 +10,24 @@ HEADERS = {
 }
 
 
+async def get_user_id(access_token: str) -> str:
+    """Get the authenticated user's ID from their access token."""
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{AUTH_BASE}/user",
+            headers={
+                **HEADERS,
+                "Authorization": f"Bearer {access_token}",
+            },
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
+
+    data = response.json()
+    return data.get("id", "")
+
+
 async def signup(email: str, password: str, full_name: str) -> dict:
     """Create a new user via Supabase Auth REST API."""
     async with httpx.AsyncClient() as client:

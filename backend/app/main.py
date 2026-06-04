@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+import httpx
+from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from .models import SignUpRequest, LoginRequest, AuthResponse
-from .supabase_auth import signup, login
+from .models import SignUpRequest, LoginRequest, AuthResponse, WardrobeItemCreate, WardrobeItemResponse
+from .supabase_auth import signup, login, get_user_id
+from .config import SUPABASE_URL, SUPABASE_ANON_KEY
 
 app = FastAPI(title="StyleSync API", version="0.1.0")
 
@@ -42,6 +44,76 @@ async def auth_login(body: LoginRequest):
         password=body.password,
     )
     return result
+
+
+REST_BASE = f"{SUPABASE_URL}/rest/v1"
+REST_HEADERS = {
+    "apikey": SUPABASE_ANON_KEY,
+    "Content-Type": "application/json",
+    "Prefer": "return=representation",
+}
+
+
+@app.post("/wardrobe", response_model=list[WardrobeItemResponse])
+async def add_wardrobe_item(
+    body: WardrobeItemCreate,
+    authorization: str = Header(...),
+):
+    """Save a wardrobe item for the authenticated user."""
+    token = authorization.replace("Bearer ", "")
+    user_id = await get_user_id(token)
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{REST_BASE}/wardrobe_items",
+            headers={
+                **REST_HEADERS,
+                "Authorization": f"Bearer {token}",
+            },
+            json={
+                "user_id": user_id,
+                "name": body.name,
+                "category": body.category,
+                "style": body.style,
+                "emoji": body.emoji,
+            },
+        )
+
+    if response.status_code not in (200, 201):
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.text,
+        )
+
+    return response.json()
+
+
+@app.get("/wardrobe", response_model=list[WardrobeItemResponse])
+async def get_wardrobe_items(authorization: str = Header(...)):
+    """Retrieve all wardrobe items for the authenticated user."""
+    token = authorization.replace("Bearer ", "")
+    user_id = await get_user_id(token)
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{REST_BASE}/wardrobe_items",
+            headers={
+                **REST_HEADERS,
+                "Authorization": f"Bearer {token}",
+            },
+            params={
+                "user_id": f"eq.{user_id}",
+                "order": "id.asc",
+            },
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.text,
+        )
+
+    return response.json()
 
 
 if __name__ == "__main__":
