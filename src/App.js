@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Login from './components/Login';
 import SignUp from './components/SignUp';
 import Welcome from './components/Welcome';
 import MyWardrobe from './components/MyWardrobe';
@@ -7,7 +8,7 @@ import EventCalendar from './components/EventCalendar';
 import Confirmation from './components/Confirmation';
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('signup');
+  const [currentScreen, setCurrentScreen] = useState('login');
   const [userData, setUserData] = useState({ name: '', email: '', password: '' });
 
   const navigateTo = (screen) => {
@@ -16,8 +17,18 @@ function App() {
 
   const renderScreen = () => {
     switch (currentScreen) {
+      case 'login':
+        return (
+          <Login
+            onLoginSuccess={(user) => {
+              setUserData((prev) => ({ ...prev, name: user.full_name || user.name || '', email: user.email || '' }));
+              navigateTo('welcome');
+            }}
+            onNavigateToSignUp={() => navigateTo('signup')}
+          />
+        );
       case 'signup':
-        return <SignUp onNext={() => navigateTo('welcome')} onUserDataChange={setUserData} />;
+        return <SignUp onNext={() => navigateTo('welcome')} onUserDataChange={setUserData} onNavigateToLogin={() => navigateTo('login')} />;
       case 'welcome':
         return <Welcome userName={userData.name} onNext={() => navigateTo('wardrobe')} />;
       case 'wardrobe':
@@ -27,7 +38,7 @@ function App() {
       case 'calendar':
         return <EventCalendar onNext={() => navigateTo('confirmation')} />;
       case 'confirmation':
-        return <Confirmation onGoHome={() => navigateTo('signup')} />;
+        return <Confirmation onGoHome={() => navigateTo('login')} />;
       default:
         return <SignUp onNext={() => navigateTo('wardrobe')} onUserDataChange={setUserData} />;
     }
