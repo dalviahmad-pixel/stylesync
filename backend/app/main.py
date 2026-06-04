@@ -2,7 +2,7 @@ import httpx
 from fastapi import FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
-from .models import SignUpRequest, LoginRequest, AuthResponse, WardrobeItemCreate, WardrobeItemResponse
+from .models import SignUpRequest, LoginRequest, AuthResponse, WardrobeItemCreate, WardrobeItemResponse, CalendarEventCreate, CalendarEventResponse
 from .supabase_auth import signup, login, get_user_id
 from .config import SUPABASE_URL, SUPABASE_ANON_KEY
 
@@ -97,6 +97,67 @@ async def get_wardrobe_items(authorization: str = Header(...)):
     async with httpx.AsyncClient() as client:
         response = await client.get(
             f"{REST_BASE}/wardrobe_items",
+            headers={
+                **REST_HEADERS,
+                "Authorization": f"Bearer {token}",
+            },
+            params={
+                "user_id": f"eq.{user_id}",
+                "order": "id.asc",
+            },
+        )
+
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.text,
+        )
+
+    return response.json()
+
+
+@app.post("/calendar", response_model=list[CalendarEventResponse])
+async def add_calendar_event(
+    body: CalendarEventCreate,
+    authorization: str = Header(...),
+):
+    """Save a calendar event for the authenticated user."""
+    token = authorization.replace("Bearer ", "")
+    user_id = await get_user_id(token)
+
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            f"{REST_BASE}/calendar_events",
+            headers={
+                **REST_HEADERS,
+                "Authorization": f"Bearer {token}",
+            },
+            json={
+                "user_id": user_id,
+                "day": body.day,
+                "event_name": body.event_name,
+                "occasion": body.occasion,
+            },
+        )
+
+    if response.status_code not in (200, 201):
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=response.text,
+        )
+
+    return response.json()
+
+
+@app.get("/calendar", response_model=list[CalendarEventResponse])
+async def get_calendar_events(authorization: str = Header(...)):
+    """Retrieve all calendar events for the authenticated user."""
+    token = authorization.replace("Bearer ", "")
+    user_id = await get_user_id(token)
+
+    async with httpx.AsyncClient() as client:
+        response = await client.get(
+            f"{REST_BASE}/calendar_events",
             headers={
                 **REST_HEADERS,
                 "Authorization": f"Bearer {token}",

@@ -33,3 +33,17 @@ class WardrobeItemResponse(BaseModel):
     category: str
     style: str
     emoji: str
+
+
+class CalendarEventCreate(BaseModel):
+    day: str
+    event_name: str
+    occasion: str
+
+
+class CalendarEventResponse(BaseModel):
+    id: int | str
+    user_id: str
+    day: str
+    event_name: str
+    occasion: str

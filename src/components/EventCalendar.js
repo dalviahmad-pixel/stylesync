@@ -1,19 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
+const API_BASE = 'http://localhost:8000';
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const occasionOptions = ['Formal', 'Smart Casual', 'Casual', 'Sport'];
 
-const initialEvents = [
-  { id: 1, day: 'Monday', name: 'Team Standup', occasion: 'Smart Casual' },
-  { id: 2, day: 'Wednesday', name: 'Client Presentation', occasion: 'Formal' },
-  { id: 3, day: 'Friday', name: 'Gym Session', occasion: 'Sport' }
-];
-
 function EventCalendar({ onNext }) {
-  const [events, setEvents] = useState(initialEvents);
+  const [events, setEvents] = useState([]);
   const [activeFormDay, setActiveFormDay] = useState(null);
   const [newEventName, setNewEventName] = useState('');
   const [newEventOccasion, setNewEventOccasion] = useState('Formal');
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
+    async function loadEvents() {
+      try {
+        const res = await fetch(`${API_BASE}/calendar`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (!res.ok) {
+          throw new Error('Failed to load calendar events');
+        }
+
+        const data = await res.json();
+        // Map backend event_name to frontend name
+        setEvents(data.map(e => ({ id: e.id, day: e.day, name: e.event_name, occasion: e.occasion })));
+      } catch (err) {
+        console.error('Failed to load calendar events:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadEvents();
+  }, []);
 
   const handleAddEvent = (day) => {
     setActiveFormDay(day);
@@ -26,17 +54,45 @@ function EventCalendar({ onNext }) {
     setNewEventName('');
   };
 
-  const handleSaveEvent = () => {
-    if (newEventName.trim()) {
-      const newEvent = {
-        id: Date.now(),
-        day: activeFormDay,
-        name: newEventName,
-        occasion: newEventOccasion
-      };
-      setEvents([...events, newEvent]);
+  const handleSaveEvent = async () => {
+    if (!newEventName.trim() || saving) return;
+
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      alert('Not authenticated. Please log in.');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch(`${API_BASE}/calendar`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          day: activeFormDay,
+          event_name: newEventName,
+          occasion: newEventOccasion,
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error('Failed to save event');
+      }
+
+      const data = await res.json();
+      const saved = data[0];
+      // Map backend event_name to frontend name
+      setEvents([...events, { id: saved.id, day: saved.day, name: saved.event_name, occasion: saved.occasion }]);
       setActiveFormDay(null);
       setNewEventName('');
+    } catch (err) {
+      console.error('Failed to save calendar event:', err);
+      alert('Failed to save event. Please try again.');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -49,6 +105,15 @@ function EventCalendar({ onNext }) {
   const getEventsForDay = (day) => {
     return events.filter(event => event.day === day);
   };
+
+  if (loading) {
+    return (
+      <div className="card">
+        <h2 className="section-heading">Your Week</h2>
+        <p style={{ textAlign: 'center' }}>Loading calendar...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="card">
@@ -94,8 +159,9 @@ function EventCalendar({ onNext }) {
                   <button 
                     className="btn-primary btn-small"
                     onClick={handleSaveEvent}
+                    disabled={saving}
                   >
-                    Save
+                    {saving ? 'Saving...' : 'Save'}
                   </button>
                   <button 
                     className="btn-secondary btn-small"
